@@ -23,51 +23,85 @@ document.getElementById("scoreCheck").onclick = function () {
   var englishScore = document.getElementById("englishScore").value * 1;
   var priorityZone = document.getElementById("priorityZone").value;
   var priorityCandidate = document.getElementById("priorityCandidate").value;
-  var plusZonePoint = 0;
-  var plusCandidateTypePoint = 0;
-  var totalScore = mathScore + literatureScore + englishScore + plusZonePoint + plusCandidateTypePoint;
-  var passFailNoti ='<div>Thí sinh';
-  switch (priorityZone) {
-    case 0:
-      plusZonePoint += 0;
-      break;
-    case "A":
-      plusZonePoint += 2;
-      break;
-    case "B":
-      plusZonePoint += 1;
-      break;
-    case "C":
-      plusZonePoint += 0.5;
-      break;
-  }
-
-  switch (priorityCandidate) {
-    case 0:
-      plusZonePoint += 0;
-      break;
-    case 1:
-      plusCandidateTypePoint += 2.5;
-      break;
-    case 2:
-      plusCandidateTypePoint += 1.5;
-      break;
-    case 3:
-      plusCandidateTypePoint += 1;
-      break;
-  }
-
-  if(totalScore >= standardScore && mathScore > 0 && literatureScore > 0 && englishScore > 0) {
-    passFailNoti += ' đỗ!</div>';
+  var passFailNoti ='';
+  if (typeof standardScore === "number" 
+  && typeof mathScore === "number" 
+  && typeof literatureScore === "number"
+  && typeof englishScore === "number"
+  && mathScore <= 10 && mathScore >= 0
+  && literatureScore <= 10 && literatureScore >= 0
+  && englishScore <= 10 && englishScore >= 0) {
+    var plusZonePoint = prioZoneChecker(priorityZone);
+    var plusCandidatePoint = prioCandidateChecker(priorityCandidate);
+    var totalScore = mathScore + literatureScore + englishScore + plusZonePoint + plusCandidatePoint;
+    var passFailresult = passFailChecker(totalScore, standardScore, mathScore, literatureScore, englishScore);
+    passFailNoti += "<div>Thí sinh ";
+    passFailNoti += passFailresult;
+    passFailNoti += '</div>';
+    passFailNoti += "<div>Tổng điểm của thí sinh là: ";
+    passFailNoti += totalScore;
+    passFailNoti += " điểm.</div>";
   }
   else {
-    passFailNoti += ' trượt!</div>';
+    passFailNoti += '<div>Sai cú pháp</div>'
   }
-  passFailNoti += '<div>Tổng điểm của thí sinh là: ' + totalScore;
-  passFailNoti += ' điểm.</div>';
   document.getElementById("scoreFooter").innerHTML = passFailNoti;
-  
 };
+
+function prioZoneChecker(zone) {
+  var plusPoint = 0;
+  switch (zone) {
+    case 0:
+      plusPoint += 0;
+      break;
+    case "A":
+      plusPoint += 2;
+      break;
+    case "B":
+      plusPoint += 1;
+      break;
+    case "C":
+      plusPoint += 0.5;
+      break;
+  }
+  return plusPoint;
+}
+
+function prioCandidateChecker(candidateType) {
+  var plusPoint = 0;
+  switch (candidateType) {
+    case 0:
+      plusPoint += 0;
+      break;
+    case 1:
+      plusPoint += 2.5;
+      break;
+    case 2:
+      plusPoint += 1.5;
+      break;
+    case 3:
+      plusPoint += 1;
+      break;
+  }
+  return plusPoint;
+}
+
+function passFailChecker(totalScore, standardScore, mathScore, literatureScore, englishScore) {
+  var result = '';
+  if (totalScore >= standardScore 
+    && mathScore > 0 
+    && literatureScore > 0 
+    && englishScore > 0) {
+    result += "đỗ!";
+  } 
+  else if(totalScore < standardScore 
+    || mathScore === 0 
+    ||literatureScore === 0 
+    || englishScore === 0){
+    result += "trượt!";
+  }
+  return result;
+}
 
 /*Bài 2: Tính tiền điện
 Input: 
@@ -80,96 +114,89 @@ Process:
 Output:
     - tiền điện phải trả
  */
-
-function electricityPriceCal_type1(electricityConsumed, priceType) {
-    var result = electricityConsumed * priceType;
-    return result;
-}
-
-function electricityPriceCal_type2(electricityConsumed, priceType) {
-    var result = (electricityConsumed) * priceType;
-    console.log(result)
-    return result;
-}
-
-function electricityPriceCal_type3(electricityConsumed, priceType) {
-    var result = (electricityConsumed) * priceType;
-    return result;
-}
-
-function electricityPriceCal_type4(electricityConsumed, priceType) {
-    var result = (electricityConsumed) * priceType;
-    return result;
-}
-
-function electricityPriceCal_type5(electricityConsumed, priceType) {
-    var result = (electricityConsumed) * priceType;
-    return result;
-}
-
-function totalPriceCal(electricityConsumed, priceType1, priceType2, priceType3, priceType4, priceType5) {
-    var result = 0;
-    if(electricityConsumed <= 50) {
-        result = electricityPriceCal_type1(electricityConsumed, priceType1);
-        return result;
-    }
-    else if (electricityConsumed <= 100 ) {
-        var totalPrice_type1 = electricityPriceCal_type1(50, priceType1);
-        console.log(totalPrice_type1)
-        var totalPrice_type2 = electricityPriceCal_type2(electricityConsumed, priceType2);
-        console.log(totalPrice_type2)
-        result = totalPrice_type1 + totalPrice_type2;
-        console.log(result);
-        return result;
-    }
-    else if (electricityConsumed <= 150 ) {
-        var totalPrice_type1 = electricityPriceCal_type1(50, priceType1);
-        console.log(totalPrice_type1)
-        var totalPrice_type2 = electricityPriceCal_type2(50, priceType2);
-        console.log(totalPrice_type2)
-        var totalPrice_type3 = electricityPriceCal_type3(electricityConsumed, priceType3);
-        console.log(totalPrice_type3)
-        totalPrice = totalPrice_type1 + totalPrice_type2 + totalPrice_type3;
-        console.log(result);
-        return result;
-    }
-    else if (electricityConsumed <= 200 ) {
-        var totalPrice_type1 = electricityPriceCal_type1(50, priceType1);
-        var totalPrice_type2 = electricityPriceCal_type2(50, priceType2);
-        var totalPrice_type3 = electricityPriceCal_type3(50, priceType3);
-        var totalPrice_type4 = electricityPriceCal_type4(electricityConsumed, priceType4);
-        result = totalPrice_type1 + totalPrice_type2 + totalPrice_type3 + totalPrice_type4;
-        console.log(result);
-        return result;
-    }
-    else if (electricityConsumed > 200 ) {
-        var totalPrice_type1 = electricityPriceCal_type1(50, priceType1);
-        var totalPrice_type2 = electricityPriceCal_type2(50, priceType2);
-        var totalPrice_type3 = electricityPriceCal_type3(50, priceType3);
-        var totalPrice_type4 = electricityPriceCal_type4(50, priceType4);
-        var totalPrice_type5 = electricityPriceCal_type5(electricityConsumed, priceType5);
-        result = totalPrice_type1 + totalPrice_type2 + totalPrice_type3 + totalPrice_type4 + totalPrice_type5;
-        console.log(result);
-        return result;
-    }
-    else {
-        return electricityNoti ='<div>Sai cú pháp</div>';
-    }
-}
-
 document.getElementById("electricityBtn").onclick = function () {
-    var userName = document.getElementById("user").value;
-    var electricityConsumed = document.getElementById("electricityAmount").value * 1;
-    console.log(electricityConsumed);
-    var priceType1 = 500;
-    var priceType2 = 650;
-    var priceType3 = 850;
-    var priceType4 = 1100;
-    var priceType5 = 1300;
+  var userName = document.getElementById("user").value;
+  var electricityConsumed = document.getElementById("electricityAmount").value * 1;
+  var price_1 = 500;
+  var price_2 = 650;
+  var price_3 = 850;
+  var price_4 = 1100;
+  var price_5 = 1300;
+  var electricityNoti = '';
+  if (typeof electricityConsumed === 'number' && electricityConsumed > 0) {
+    var result = totalPriceCal(electricityConsumed, price_1, price_2, price_3, price_4, price_5);
+    electricityNoti = "<div>Tiền điện của " + userName + " là " + result + " đồng.<div>";
+    document.getElementById("electricityFooter").innerHTML = electricityNoti;
+  }
+  else {
+    electricityNoti += '<div>Sai cú pháp</div>';
+    document.getElementById("electricityFooter").innerHTML = electricityNoti;
+  }
 
-    var totalPrice = totalPriceCal(electricityConsumed, priceType1, priceType2, priceType3, priceType4, priceType5);
-    var electricityNoti ='<div>Tiền điện của ' + userName + ' là ' + totalPrice + ' đồng.<div>';
+};
 
-    document.getElementById('electricityFooter').innerHTML = electricityNoti
+function totalPriceCal(electrAmount, price_1, price_2, price_3, price_4, price_5) {
+  var result = 0;
+  if (electrAmount <= 50) {
+    result = priceCal_1(electrAmount, price_1);
+    return result;
+  } 
+  else if (electrAmount <= 100) {
+    var totalPrice_1 = priceCal_1(50, price_1);
+    console.log(totalPrice_1);
+    var totalPrice_2 = priceCal_2(electrAmount, price_2);
+    result = totalPrice_1 + totalPrice_2;
+    return result;
+  } 
+  else if (electrAmount <= 150) {
+    var totalPrice_1 = priceCal_1(50, price_1);
+    var totalPrice_2 = priceCal_2(100, price_2);
+    var totalPrice_3 = priceCal_3(electrAmount,price_3);
+    result = totalPrice_1 + totalPrice_2 + totalPrice_3;
+    return result;
+  } 
+  else if (electrAmount <= 200) {
+    var totalPrice_1 = priceCal_1(50, price_1);
+    var totalPrice_2 = priceCal_2(100, price_2);
+    var totalPrice_3 = priceCal_3(150, price_3);
+    var totalPrice_4 = priceCal_4(electrAmount, price_4);
+    result = totalPrice_1 + totalPrice_2 + totalPrice_3 + totalPrice_4;
+    return result;
+  } 
+  else {
+    var totalPrice_1 = priceCal_1(50, price_1);
+    var totalPrice_2 = priceCal_2(100, price_2);
+    var totalPrice_3 = priceCal_3(150, price_3);
+    var totalPrice_4 = priceCal_4(200, price_4);
+    var totalPrice_5 = priceCal_5(electrAmount, price_5);
+    result = totalPrice_1 + totalPrice_2 + totalPrice_3 + totalPrice_4 + totalPrice_5;
+    return result;
+  } 
 }
+
+function priceCal_1(electrAmount, price) {
+  var result = electrAmount * price;
+  return result;
+}
+
+function priceCal_2(electrAmount, price) {
+  var result = (electrAmount - 50) * price;
+  return result;
+}
+
+function priceCal_3(electrAmount, price) {
+  var result = (electrAmount - 100) * price;
+  return result;
+}
+
+function priceCal_4(electrAmount, price) {
+  var result = (electrAmount - 150) * price;
+  return result;
+}
+
+function priceCal_5(electrAmount, price) {
+  var result = (electrAmount - 200) * price;
+  return result;
+}
+
 
